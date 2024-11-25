@@ -1,0 +1,396 @@
+wordpress
+user-admin
+pas-admin@12345678!$9
+
+
+
+
+                 HTML PAGE CONVERT TO WORDPRESS THEME FUNCTION
+           ----------------------------------------------------------
+          => echo get_template_directory_uri();
+          => bloginfo('template_directory');
+_____________________________________________________________________________________________________________
+
+            ADD HEADER AND FOOTER FUNCTION
+     -------------------------------------------
+        =>get_header();
+        =>get_footer();
+__________________________________________________________________________
+  Register Nav Menu in Wordpress->
+=> register_nav_menus(array(
+));
+=>wp_nav_menu(array(
+));
+_________________________________________________________
+Default page template in Wordpress-
+=>  the_title();
+____________________________________________________________
+display page content theme in wordpress->
+=>the_content();
+=> echo get_the_content();
+______________________________________________
+Enabling support for feature image in wordpress->
+=>add_theme_support('post-thumbnails');
+-------------------------------------
+add thumbnail image->
+the_post_thumbnail(); // Without parameter ->; Thumbnail
+the_post_thumbnail( 'thumbnail' ); // Thumbnail (default 150px x 150px max)
+the_post_thumbnail( 'medium' ); // Medium resolution (default 300px x 300px max)
+the_post_thumbnail( 'medium_large' ); // Medium-large resolution (default 768px x no height limit max)
+the_post_thumbnail( 'large' ); // Large resolution (default 1024px x 1024px max)
+the_post_thumbnail( 'full' ); // Original image resolution (unmodified)
+the_post_thumbnail( array( 100, 100 ) ); // Other resolutions (height, width)
+-------------------------
+attachment path->
+=>$imagepath=wp_get_attachment_image_src(get_post_thumbnail_id(),'medium');
+-----------------------------------------------------------------
+Add custom header image(logo)
+=>add_theme_support(custom-header);
+=>$logoimg=get_header_image();
+_______________________________________________________
+Custom page template
+=> //Template Name: 
+___________________________________________________________
+display post in wordpress-
+=>have_posts()
+=>the_post()
+_______________________________________________
+custom theme field
+=>the field();
+
+repeater function-
+------------------------------
+		<?php
+                        if( have_rows('about_name') ) {
+                            while( have_rows('about_name') ) {
+                                the_row();
+                    ?>
+ $sub_value = the_sub_field('sub_field');
+                                                                                   
+____________________________________________________________________________________
+custom post type
+_____________________
+first function.php---
+function meet_our_blogs() {
+    $labels = array(
+        'name' => 'Meet',
+        'singular_name' => 'Meet',
+        'add_new' => 'Add New Meet',
+        'add_new_item' => 'Add New Meet',
+        'edit_item' => 'Edit Meet',
+        'new_item' => 'New Meet',
+        'all_items' => 'All Meet',
+        'view_item' => 'View Meet',
+        'search_items' => 'Search Meet',
+        'not_found' =>  'No Meet Found',
+        'not_found_in_trash' => 'No Meet found in Trash',
+        'parent_item_colon' => '',
+        'menu_name' => 'Meet our team',
+    );
+    $args = array(
+        'labels' => $labels,
+        'public' => true,
+        'has_archive' => true,
+        'show_ui' => true,
+        'capability_type' => 'post',
+        'hierarchical' => false,
+        'rewrite' => array('slug' => 'Meet'),
+        'query_var' => true,
+        'menu_icon' => 'dashicons-sticky',
+        'supports' => array(
+            'title',
+            'editor',
+            'excerpt',
+            'trackbacks',
+            'custom-fields',
+            'comments',
+            'revisions',
+            'thumbnail',
+            'author',
+            'page-attributes'
+        )
+    );
+    register_post_type( 'meet', $args );
+    // register taxonomy
+    register_taxonomy('meet_category', 'meet',
+        array(
+                'hierarchical'  => true,
+                'label'         => 'Category',
+                'query_var'     => true,
+                'rewrite'       => array(
+                'slug'          => 'meet-category'
+            )
+        )
+    );
+  }
+  add_action( 'init', 'meet_our_blogs' );
+
+Then Home.php-
+--------------
+     <?php
+                $wpfeature=array(
+                    'post_type'=>'Peoplesays',
+                    // 'Lateststories_category' => 'Mno',
+                    'orderby'    => 'date',
+                    'post_status' => 'publish',
+                    'order'    => 'DESC',
+                    // 'posts_per_page' => 3,
+                    'paged' => get_query_var('paged') ? get_query_var('paged') : 1
+                );
+                $featurequery=new Wp_Query($wpfeature);
+                while($featurequery->have_posts()){
+                    $featurequery->the_post();
+                    $imagepath=wp_get_attachment_image_src(get_post_thumbnail_id(),'large');
+            ?>
+
+<div> class
+
+		<?php
+                }
+                    wp_reset_postdata();
+            ?>
+
+contact form code:
+-----------------------
+<?php echo do_shortcode('');?>
+
+button code:-
+----------------
+<?php $teambtn= get_field('team_button');?>
+<a href="<?php echo $teambtn['url'];?>"><?php echo $teambtn['title'];?></p>
+_________________________________________________________________________
+
+
+
+//Register fields
+Social links//
+--------------------
+add_filter('admin_init', 'register_fields');
+function register_fields()
+{
+  register_setting('general', 'address', 'esc_attr');
+    add_settings_field('address', '<label for="address">'
+    .__('Address' , 'address' ).'</label>' , 'address', 'general');
+
+    register_setting('general', 'call', 'esc_attr');
+    add_settings_field('call', '<label for="call">'
+    .__('Number' , 'call' ).'</label>' , 'call', 'general');
+
+  register_setting('general', 'email', 'esc_attr');
+    add_settings_field('email', '<label for="email">'
+    .__('Email' , 'email' ).'</label>' , 'email', 'general');
+
+  register_setting('general', 'facebook', 'esc_attr');
+    add_settings_field('facebook', '<label for="facebook">'
+    .__('Facebook' , 'facebook' ).'</label>' , 'facebook', 'general');
+
+  register_setting('general', 'instagram', 'esc_attr');
+    add_settings_field('instagram', '<label for="instagram">'
+    .__('Instagram' , 'instagram' ).'</label>' , 'instagram', 'general');
+
+  register_setting('general', 'youtube', 'esc_attr');
+    add_settings_field('youtube', '<label for="youtube">'
+    .__('Youtube' , 'youtube' ).'</label>' , 'youtube', 'general');
+
+  register_setting('general', 'linkedin', 'esc_attr');
+    add_settings_field('linkedin', '<label for="linkedin">'
+    .__('Linkedin' , 'linkedin' ).'</label>' , 'linkedin', 'general');
+
+  register_setting('general', 'twitter', 'esc_attr');
+    add_settings_field('twitter', '<label for="twitter">'
+    .__('Twitter' , 'twitter' ).'</label>' , 'twitter', 'general');
+}
+function address()
+   {
+       $value = get_option( 'address', '' );
+       echo '<input type="text" id="address" name="address"
+       class="regular-text" value="' . $value . '" />';
+   }
+   function call()
+   {
+       $value = get_option( 'call', '' );
+       echo '<input type="text" id="call" name="call"
+       class="regular-text" value="' . $value . '" />';
+   }
+   function email()
+   {
+       $value = get_option( 'email', '' );
+       echo '<input type="text" id="email" name="email"
+       class="regular-text" value="' . $value . '" />';
+   }
+   function facebook()
+   {
+       $value = get_option( 'facebook', '' );
+       echo '<input type="text" id="facebook" name="facebook"
+       class="regular-text" value="' . $value . '" />';
+   }
+   function instagram()
+   {
+       $value = get_option( 'instagram', '' );
+       echo '<input type="text" id="instagram" name="instagram"
+       class="regular-text" value="' . $value . '" />';
+   }
+   function youtube()
+   {
+       $value = get_option( 'youtube', '' );
+       echo '<input type="text" id="youtube" name="youtube"
+       class="regular-text" value="' . $value . '" />';
+   } 
+   function linkedin()
+   {
+       $value = get_option( 'linkedin', '' );
+       echo '<input type="text" id="linkedin" name="linkedin"
+       class="regular-text" value="' . $value . '" />';
+   }
+   function twitter()
+   {
+       $value = get_option( 'twitter', '' );
+       echo '<input type="text" id="twitter" name="twitter"
+       class="regular-text" value="' . $value . '" />';
+   }
+
+get_option('social link');
+
+_____________________________________________________
+
+
+// bootstrap 5 wp_nav_menu walker
+class bootstrap_5_wp_nav_menu_walker extends Walker_Nav_menu
+   {
+   private $current_item;
+   private $dropdown_menu_alignment_values = [
+      'dropdown-menu-start',
+      'dropdown-menu-end',
+      'dropdown-menu-sm-start',
+      'dropdown-menu-sm-end',
+      'dropdown-menu-md-start',
+      'dropdown-menu-md-end',
+      'dropdown-menu-lg-start',
+      'dropdown-menu-lg-end',
+      'dropdown-menu-xl-start',
+      'dropdown-menu-xl-end',
+      'dropdown-menu-xxl-start',
+      'dropdown-menu-xxl-end'
+   ];
+   function start_lvl(&$output, $depth = 0, $args = null)
+   {
+      $dropdown_menu_class[] = '';
+      foreach($this->current_item->classes as $class) {
+         if(in_array($class, $this->dropdown_menu_alignment_values)) {
+         $dropdown_menu_class[] = $class;
+         }
+      }
+      $indent = str_repeat("\t", $depth);
+      $submenu = ($depth > 0) ? ' sub-menu' : '';
+      $output .= "\n$indent<ul class=\"dropdown-menu$submenu " . esc_attr(implode(" ",$dropdown_menu_class)) . " depth_$depth\">\n";
+   }
+   function start_el(&$output, $item, $depth = 0, $args = null, $id = 0)
+   {
+      $this->current_item = $item;
+      $indent = ($depth) ? str_repeat("\t", $depth) : '';
+      $li_attributes = '';
+      $class_names = $value = '';
+      $classes = empty($item->classes) ? array() : (array) $item->classes;
+      $classes[] = ($args->walker->has_children) ? 'dropdown' : '';
+      $classes[] = 'nav-item';
+      $classes[] = 'nav-item-' . $item->ID;
+      if ($depth && $args->walker->has_children) {
+         $classes[] = 'dropdown-menu dropdown-menu-end';
+      }
+      $class_names =  join(' ', apply_filters('nav_menu_css_class', array_filter($classes), $item, $args));
+      $class_names = ' class="' . esc_attr($class_names) . '"';
+      $id = apply_filters('nav_menu_item_id', 'menu-item-' . $item->ID, $item, $args);
+      $id = strlen($id) ? ' id="' . esc_attr($id) . '"' : '';
+      $output .= $indent . '<li ' . $id . $value . $class_names . $li_attributes . '>';
+      $attributes = !empty($item->attr_title) ? ' title="' . esc_attr($item->attr_title) . '"' : '';
+      $attributes .= !empty($item->target) ? ' target="' . esc_attr($item->target) . '"' : '';
+      $attributes .= !empty($item->xfn) ? ' rel="' . esc_attr($item->xfn) . '"' : '';
+      $attributes .= !empty($item->url) ? ' href="' . esc_attr($item->url) . '"' : '';
+      $active_class = ($item->current || $item->current_item_ancestor || in_array("current_page_parent", $item->classes, true) || in_array("current-post-ancestor", $item->classes, true)) ? 'active' : '';
+      $nav_link_class = ( $depth > 0 ) ? 'dropdown-item ' : 'nav-link ';
+      $attributes .= ( $args->walker->has_children ) ? ' class="'. $nav_link_class . $active_class . ' dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"' : ' class="'. $nav_link_class . $active_class . '"';
+      $item_output = $args->before;
+      $item_output .= '<a' . $attributes . '>';
+      $item_output .= $args->link_before . apply_filters('the_title', $item->title, $item->ID) . $args->link_after;
+      $item_output .= '</a>';
+      $item_output .= $args->after;
+      $output .= apply_filters('walker_nav_menu_start_el', $item_output, $item, $depth, $args);
+   }
+      }
+
+
+--------------------------------------------------------------------------------------
+fadeinright and fadein left-
+<div class="rcnt_dtl wow <?php echo $rce= ($$energy%2==0)? "fadeInUp" : "fadeInDown"?>"
+                data-wow-delay="<?php echo $rce= ($$energy%2==0)? "0.2s" : "0.4s"?>">
+
+
+modal id js
+-------------------
+<script>
+        // Getting the table element
+        var tables = document.getElementsByClassName("modal");
+        // Looping over tables
+        for (var i = 0; i < tables.length; i++) {
+            // Get the ith table
+            var modal = tables[i];
+            // Set the id dynamically
+            modal.setAttribute("id", "example" + i  );
+            // The line below will also give id
+            // dynamically to the tables
+            //table.id = i+1;
+            console.log(modal);
+        }
+    </script>
+<script>
+        // Getting the table element
+        var tables1 = document.getElementsByClassName("box");
+        // Looping over tables
+        for (var i = 0; i < tables1.length; i++) {
+            // Get the ith table
+            var box = tables1[i];
+            // Set the id dynamically
+            box.setAttribute("data-bs-target", `${'#' + 'example' + i}`);
+            // The line below will also give id
+            // dynamically to the tables
+            //table.id = i+1;
+            console.log(box);
+        }
+    </script>
+
+download btn in repeater sec-
+-------------------------------------------------
+<?php $file=  get_sub_field('inr_rep_btn');
+	$filename=$file['filename'];
+	 $fileurl=$file['url'];
+	?>
+<?php if($file):?>
+<a href="<?php echo $fileurl;?>" class="cmn_btn" download><?php the_sub_field('dwn_btn'); ?></a>
+<?php endif;?>
+
+
+
+**pagination for post type
+ <?php $total_pages = $featurequery->max_num_pages;
+          if ( $total_pages > 1 ) {
+              $current_page = max( 1, get_query_var( 'paged' ) );
+
+              echo '<ul class="pagination justify-content-center">';
+
+              if ( $current_page > 1 ) {
+                  echo '<li class="page-item"><a class="page-link pv_btn_ottr" href="' . get_pagenum_link( $current_page - 1 ) . '">
+                  <span aria-hidden="true"><i class="fa fa-arrow-left"></i></span><span class="pv_btn">Prev</span></a></li>';
+              }
+
+              for ( $i = 1; $i <= $total_pages; $i++ ) {
+                  echo '<li class="page-item ' . ( $current_page == $i ? 'active' : '' ) . '"><a class="page-link" href="' . get_pagenum_link( $i ) . '">' . $i . '</a></li>';
+              }
+
+              if ( $current_page < $total_pages ) {
+                  echo '<li class="page-item"><a class="page-link pv_btn_ottr" href="' . get_pagenum_link( $current_page + 1 ) . '">
+                  <span class="pv_btn">Next</span><span aria-hidden="true"><i class="fa fa-arrow-right"></i></span></a></li>';
+              }
+
+              echo '</ul>';
+          }
+        ?>
